@@ -2,9 +2,8 @@
 
 namespace Sabre\DAV\Xml\Property;
 
-use
-    Sabre\Xml\Writer,
-    Sabre\Xml\XmlSerializable;
+use Sabre\Xml\Writer;
+use Sabre\Xml\XmlSerializable;
 
 /**
  * supported-method-set property.
@@ -16,7 +15,7 @@ use
  * http://tools.ietf.org/html/rfc3253#section-3.1.3
  *
  * @copyright Copyright (C) 2007-2015 fruux GmbH (https://fruux.com/).
- * @author Evert Pot (http://evertpot.com/) 
+ * @author Evert Pot (http://evertpot.com/)
  * @license http://sabre.io/license/ Modified BSD License
  */
 class SupportedMethodSet implements XmlSerializable {

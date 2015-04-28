@@ -112,7 +112,7 @@ class SupportedCalendarComponentSet implements Element {
         $components = [];
 
         foreach($elems as $elem) {
-            if ($elem['name'] === '{'.Plugin::NS_CALDAV . '}comp') {
+            if ($elem['name'] === '{' . Plugin::NS_CALDAV . '}comp') {
                 $components[] = $elem['attributes']['name'];
             }
         }

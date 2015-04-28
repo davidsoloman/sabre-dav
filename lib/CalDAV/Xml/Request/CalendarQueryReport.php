@@ -93,7 +93,7 @@ class CalendarQueryReport implements XmlDeserializable {
         ]);
 
         $newProps = [
-            'filters' => null,
+            'filters'    => null,
             'properties' => [],
         ];
 
@@ -106,10 +106,10 @@ class CalendarQueryReport implements XmlDeserializable {
                 case '{DAV:}prop' :
                     $newProps['properties'] = array_keys($elem['value']);
                     if (isset($elem['value']['{' . Plugin::NS_CALDAV . '}calendar-data'])) {
-                        $newProps+=$elem['value']['{' . Plugin::NS_CALDAV . '}calendar-data'];
+                        $newProps += $elem['value']['{' . Plugin::NS_CALDAV . '}calendar-data'];
                     }
                     break;
-                case '{'.Plugin::NS_CALDAV.'}filter' :
+                case '{' . Plugin::NS_CALDAV . '}filter' :
                     foreach($elem['value'] as $subElem) {
                         if ($subElem['name'] === '{' . Plugin::NS_CALDAV . '}comp-filter') {
                             if (!is_null($newProps['filters'])) {
@@ -129,7 +129,7 @@ class CalendarQueryReport implements XmlDeserializable {
         }
 
         $obj = new self();
-        foreach($newProps as $key=>$value) {
+        foreach($newProps as $key => $value) {
             $obj->$key = $value;
         }
         return $obj;

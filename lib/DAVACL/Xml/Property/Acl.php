@@ -2,11 +2,10 @@
 
 namespace Sabre\DAVACL\Xml\Property;
 
-use
-    Sabre\DAV,
-    Sabre\Xml\Element,
-    Sabre\Xml\Reader,
-    Sabre\Xml\Writer;
+use Sabre\DAV;
+use Sabre\Xml\Element;
+use Sabre\Xml\Reader;
+use Sabre\Xml\Writer;
 
 /**
  * This class represents the {DAV:}acl property.
@@ -37,7 +36,7 @@ class Acl implements Element {
      * Whether or not the server base url is required to be prefixed when
      * serializing the property.
      *
-     * @var boolean
+     * @var bool
      */
     protected $prefixBaseUrl;
 
@@ -138,7 +137,7 @@ class Acl implements Element {
 
         foreach((array)$reader->parseInnerTree($elementMap) as $element) {
 
-            if ($element['name']!=='{DAV:}ace') {
+            if ($element['name'] !== '{DAV:}ace') {
                 continue;
             }
             $ace = $element['value'];

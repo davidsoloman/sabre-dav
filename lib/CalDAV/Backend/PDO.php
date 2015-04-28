@@ -2,11 +2,10 @@
 
 namespace Sabre\CalDAV\Backend;
 
-use
-    Sabre\VObject,
-    Sabre\CalDAV,
-    Sabre\DAV,
-    Sabre\DAV\Exception\Forbidden;
+use Sabre\VObject;
+use Sabre\CalDAV;
+use Sabre\DAV;
+use Sabre\DAV\Exception\Forbidden;
 
 /**
  * PDO CalDAV backend
@@ -81,11 +80,11 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
      * @var array
      */
     public $propertyMap = [
-        '{DAV:}displayname'                          => 'displayname',
+        '{DAV:}displayname'                                   => 'displayname',
         '{urn:ietf:params:xml:ns:caldav}calendar-description' => 'description',
         '{urn:ietf:params:xml:ns:caldav}calendar-timezone'    => 'timezone',
-        '{http://apple.com/ns/ical/}calendar-order'  => 'calendarorder',
-        '{http://apple.com/ns/ical/}calendar-color'  => 'calendarcolor',
+        '{http://apple.com/ns/ical/}calendar-order'           => 'calendarorder',
+        '{http://apple.com/ns/ical/}calendar-color'           => 'calendarcolor',
     ];
 
     /**
@@ -150,7 +149,7 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
 
         // Making fields a comma-delimited list
         $fields = implode(', ', $fields);
-        $stmt = $this->pdo->prepare("SELECT " . $fields . " FROM ".$this->calendarTableName." WHERE principaluri = ? ORDER BY calendarorder ASC");
+        $stmt = $this->pdo->prepare("SELECT " . $fields . " FROM " . $this->calendarTableName . " WHERE principaluri = ? ORDER BY calendarorder ASC");
         $stmt->execute([$principalUri]);
 
         $calendars = [];
@@ -158,21 +157,21 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
 
             $components = [];
             if ($row['components']) {
-                $components = explode(',',$row['components']);
+                $components = explode(',', $row['components']);
             }
 
             $calendar = [
-                'id' => $row['id'],
-                'uri' => $row['uri'],
-                'principaluri' => $row['principaluri'],
-                '{' . CalDAV\Plugin::NS_CALENDARSERVER . '}getctag' => 'http://sabre.io/ns/sync/' . ($row['synctoken']?$row['synctoken']:'0'),
-                '{http://sabredav.org/ns}sync-token' => $row['synctoken']?$row['synctoken']:'0',
+                'id'                                                                 => $row['id'],
+                'uri'                                                                => $row['uri'],
+                'principaluri'                                                       => $row['principaluri'],
+                '{' . CalDAV\Plugin::NS_CALENDARSERVER . '}getctag'                  => 'http://sabre.io/ns/sync/' . ($row['synctoken']?$row['synctoken']:'0'),
+                '{http://sabredav.org/ns}sync-token'                                 => $row['synctoken']?$row['synctoken']:'0',
                 '{' . CalDAV\Plugin::NS_CALDAV . '}supported-calendar-component-set' => new CalDAV\Xml\Property\SupportedCalendarComponentSet($components),
-                '{' . CalDAV\Plugin::NS_CALDAV . '}schedule-calendar-transp' => new CalDAV\Xml\Property\ScheduleCalendarTransp($row['transparent']?'transparent':'opaque'),
+                '{' . CalDAV\Plugin::NS_CALDAV . '}schedule-calendar-transp'         => new CalDAV\Xml\Property\ScheduleCalendarTransp($row['transparent']?'transparent':'opaque'),
             ];
 
 
-            foreach($this->propertyMap as $xmlName=>$dbName) {
+            foreach($this->propertyMap as $xmlName => $dbName) {
                 $calendar[$xmlName] = $row[$dbName];
             }
 
@@ -219,14 +218,14 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
             if (!($properties[$sccs] instanceof CalDAV\Xml\Property\SupportedCalendarComponentSet)) {
                 throw new DAV\Exception('The ' . $sccs . ' property must be of type: \Sabre\CalDAV\Xml\Property\SupportedCalendarComponentSet');
             }
-            $values[':components'] = implode(',',$properties[$sccs]->getValue());
+            $values[':components'] = implode(',', $properties[$sccs]->getValue());
         }
         $transp = '{' . CalDAV\Plugin::NS_CALDAV . '}schedule-calendar-transp';
         if (isset($properties[$transp])) {
-            $values[':transparent'] = $properties[$transp]->getValue()==='transparent';
+            $values[':transparent'] = $properties[$transp]->getValue() === 'transparent';
         }
 
-        foreach($this->propertyMap as $xmlName=>$dbName) {
+        foreach($this->propertyMap as $xmlName => $dbName) {
             if (isset($properties[$xmlName])) {
 
                 $values[':' . $dbName] = $properties[$xmlName];
@@ -234,7 +233,7 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
             }
         }
 
-        $stmt = $this->pdo->prepare("INSERT INTO ".$this->calendarTableName." (".implode(', ', $fieldNames).") VALUES (".implode(', ',array_keys($values)).")");
+        $stmt = $this->pdo->prepare("INSERT INTO " . $this->calendarTableName . " (" . implode(', ', $fieldNames) . ") VALUES (" . implode(', ', array_keys($values)) . ")");
         $stmt->execute($values);
 
         return $this->pdo->lastInsertId();
@@ -264,12 +263,12 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
 
         $propPatch->handle($supportedProperties, function($mutations) use ($calendarId) {
             $newValues = [];
-            foreach($mutations as $propertyName=>$propertyValue) {
+            foreach($mutations as $propertyName => $propertyValue) {
 
                 switch($propertyName) {
                     case '{' . CalDAV\Plugin::NS_CALDAV . '}schedule-calendar-transp' :
                         $fieldName = 'transparent';
-                        $newValues[$fieldName] = $propertyValue->getValue()==='transparent';
+                        $newValues[$fieldName] = $propertyValue->getValue() === 'transparent';
                         break;
                     default :
                         $fieldName = $this->propertyMap[$propertyName];
@@ -279,11 +278,11 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
 
             }
             $valuesSql = [];
-            foreach($newValues as $fieldName=>$value) {
+            foreach($newValues as $fieldName => $value) {
                 $valuesSql[] = $fieldName . ' = ?';
             }
 
-            $stmt = $this->pdo->prepare("UPDATE " . $this->calendarTableName . " SET " . implode(', ',$valuesSql) . " WHERE id = ?");
+            $stmt = $this->pdo->prepare("UPDATE " . $this->calendarTableName . " SET " . implode(', ', $valuesSql) . " WHERE id = ?");
             $newValues['id'] = $calendarId;
             $stmt->execute(array_values($newValues));
 
@@ -303,13 +302,13 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
      */
     function deleteCalendar($calendarId) {
 
-        $stmt = $this->pdo->prepare('DELETE FROM '.$this->calendarObjectTableName.' WHERE calendarid = ?');
+        $stmt = $this->pdo->prepare('DELETE FROM ' . $this->calendarObjectTableName . ' WHERE calendarid = ?');
         $stmt->execute([$calendarId]);
 
-        $stmt = $this->pdo->prepare('DELETE FROM '.$this->calendarTableName.' WHERE id = ?');
+        $stmt = $this->pdo->prepare('DELETE FROM ' . $this->calendarTableName . ' WHERE id = ?');
         $stmt->execute([$calendarId]);
 
-        $stmt = $this->pdo->prepare('DELETE FROM '.$this->calendarChangesTableName.' WHERE id = ?');
+        $stmt = $this->pdo->prepare('DELETE FROM ' . $this->calendarChangesTableName . ' WHERE id = ?');
         $stmt->execute([$calendarId]);
 
     }
@@ -347,7 +346,7 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
      */
     function getCalendarObjects($calendarId) {
 
-        $stmt = $this->pdo->prepare('SELECT id, uri, lastmodified, etag, calendarid, size, componenttype FROM '.$this->calendarObjectTableName.' WHERE calendarid = ?');
+        $stmt = $this->pdo->prepare('SELECT id, uri, lastmodified, etag, calendarid, size, componenttype FROM ' . $this->calendarObjectTableName . ' WHERE calendarid = ?');
         $stmt->execute([$calendarId]);
 
         $result = [];
@@ -383,9 +382,9 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
      * @param string $objectUri
      * @return array|null
      */
-    function getCalendarObject($calendarId,$objectUri) {
+    function getCalendarObject($calendarId, $objectUri) {
 
-        $stmt = $this->pdo->prepare('SELECT id, uri, lastmodified, etag, calendarid, size, calendardata, componenttype FROM '.$this->calendarObjectTableName.' WHERE calendarid = ? AND uri = ?');
+        $stmt = $this->pdo->prepare('SELECT id, uri, lastmodified, etag, calendarid, size, calendardata, componenttype FROM ' . $this->calendarObjectTableName . ' WHERE calendarid = ? AND uri = ?');
         $stmt->execute([$calendarId, $objectUri]);
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -418,10 +417,10 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
      */
     function getMultipleCalendarObjects($calendarId, array $uris) {
 
-        $query = 'SELECT id, uri, lastmodified, etag, calendarid, size, calendardata, componenttype FROM '.$this->calendarObjectTableName.' WHERE calendarid = ? AND uri IN (';
+        $query = 'SELECT id, uri, lastmodified, etag, calendarid, size, calendardata, componenttype FROM ' . $this->calendarObjectTableName . ' WHERE calendarid = ? AND uri IN (';
         // Inserting a whole bunch of question marks
-        $query.=implode(',', array_fill(0, count($uris), '?'));
-        $query.=')';
+        $query .= implode(',', array_fill(0, count($uris), '?'));
+        $query .= ')';
 
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(array_merge([$calendarId], $uris));
@@ -464,11 +463,11 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
      * @param string $calendarData
      * @return string|null
      */
-    function createCalendarObject($calendarId,$objectUri,$calendarData) {
+    function createCalendarObject($calendarId, $objectUri, $calendarData) {
 
         $extraData = $this->getDenormalizedData($calendarData);
 
-        $stmt = $this->pdo->prepare('INSERT INTO '.$this->calendarObjectTableName.' (calendarid, uri, calendardata, lastmodified, etag, size, componenttype, firstoccurence, lastoccurence, uid) VALUES (?,?,?,?,?,?,?,?,?,?)');
+        $stmt = $this->pdo->prepare('INSERT INTO ' . $this->calendarObjectTableName . ' (calendarid, uri, calendardata, lastmodified, etag, size, componenttype, firstoccurence, lastoccurence, uid) VALUES (?,?,?,?,?,?,?,?,?,?)');
         $stmt->execute([
             $calendarId,
             $objectUri,
@@ -505,11 +504,11 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
      * @param string $calendarData
      * @return string|null
      */
-    function updateCalendarObject($calendarId,$objectUri,$calendarData) {
+    function updateCalendarObject($calendarId, $objectUri, $calendarData) {
 
         $extraData = $this->getDenormalizedData($calendarData);
 
-        $stmt = $this->pdo->prepare('UPDATE '.$this->calendarObjectTableName.' SET calendardata = ?, lastmodified = ?, etag = ?, size = ?, componenttype = ?, firstoccurence = ?, lastoccurence = ?, uid = ? WHERE calendarid = ? AND uri = ?');
+        $stmt = $this->pdo->prepare('UPDATE ' . $this->calendarObjectTableName . ' SET calendardata = ?, lastmodified = ?, etag = ?, size = ?, componenttype = ?, firstoccurence = ?, lastoccurence = ?, uid = ? WHERE calendarid = ? AND uri = ?');
         $stmt->execute([$calendarData, time(), $extraData['etag'], $extraData['size'], $extraData['componentType'], $extraData['firstOccurence'], $extraData['lastOccurence'], $extraData['uid'], $calendarId, $objectUri]);
 
         $this->addChange($calendarId, $objectUri, 2);
@@ -542,7 +541,7 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
         $lastOccurence = null;
         $uid = null;
         foreach($vObject->getComponents() as $component) {
-            if ($component->name!=='VTIMEZONE') {
+            if ($component->name !== 'VTIMEZONE') {
                 $componentType = $component->name;
                 $uid = (string)$component->UID;
                 break;
@@ -587,12 +586,12 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
         }
 
         return [
-            'etag' => md5($calendarData),
-            'size' => strlen($calendarData),
-            'componentType' => $componentType,
+            'etag'           => md5($calendarData),
+            'size'           => strlen($calendarData),
+            'componentType'  => $componentType,
             'firstOccurence' => $firstOccurence,
             'lastOccurence'  => $lastOccurence,
-            'uid' => $uid,
+            'uid'            => $uid,
         ];
 
     }
@@ -606,9 +605,9 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
      * @param string $objectUri
      * @return void
      */
-    function deleteCalendarObject($calendarId,$objectUri) {
+    function deleteCalendarObject($calendarId, $objectUri) {
 
-        $stmt = $this->pdo->prepare('DELETE FROM '.$this->calendarObjectTableName.' WHERE calendarid = ? AND uri = ?');
+        $stmt = $this->pdo->prepare('DELETE FROM ' . $this->calendarObjectTableName . ' WHERE calendarid = ? AND uri = ?');
         $stmt->execute([$calendarId, $objectUri]);
 
         $this->addChange($calendarId, $objectUri, 3);
@@ -700,9 +699,9 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
         }
 
         if ($requirePostFilter) {
-            $query = "SELECT uri, calendardata FROM ".$this->calendarObjectTableName." WHERE calendarid = :calendarid";
+            $query = "SELECT uri, calendardata FROM " . $this->calendarObjectTableName . " WHERE calendarid = :calendarid";
         } else {
-            $query = "SELECT uri FROM ".$this->calendarObjectTableName." WHERE calendarid = :calendarid";
+            $query = "SELECT uri FROM " . $this->calendarObjectTableName . " WHERE calendarid = :calendarid";
         }
 
         $values = [
@@ -710,16 +709,16 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
         ];
 
         if ($componentType) {
-            $query.=" AND componenttype = :componenttype";
+            $query .= " AND componenttype = :componenttype";
             $values['componenttype'] = $componentType;
         }
 
         if ($timeRange && $timeRange['start']) {
-            $query.=" AND lastoccurence > :startdate";
+            $query .= " AND lastoccurence > :startdate";
             $values['startdate'] = $timeRange['start']->getTimeStamp();
         }
         if ($timeRange && $timeRange['end']) {
-            $query.=" AND firstoccurence < :enddate";
+            $query .= " AND firstoccurence < :enddate";
             $values['enddate'] = $timeRange['end']->getTimeStamp();
         }
 
@@ -844,7 +843,7 @@ SQL;
     function getChangesForCalendar($calendarId, $syncToken, $syncLevel, $limit = null) {
 
         // Current synctoken
-        $stmt = $this->pdo->prepare('SELECT synctoken FROM ' .$this->calendarTableName . ' WHERE id = ?');
+        $stmt = $this->pdo->prepare('SELECT synctoken FROM ' . $this->calendarTableName . ' WHERE id = ?');
         $stmt->execute([ $calendarId ]);
         $currentToken = $stmt->fetchColumn(0);
 
@@ -860,7 +859,7 @@ SQL;
         if ($syncToken) {
 
             $query = "SELECT uri, operation FROM " . $this->calendarChangesTableName . " WHERE synctoken >= ? AND synctoken < ? AND calendarid = ? ORDER BY synctoken";
-            if ($limit>0) $query.= " LIMIT " . (int)$limit;
+            if ($limit > 0) $query .= " LIMIT " . (int)$limit;
 
             // Fetching all changes
             $stmt = $this->pdo->prepare($query);
@@ -913,7 +912,7 @@ SQL;
      */
     protected function addChange($calendarId, $objectUri, $operation) {
 
-        $stmt = $this->pdo->prepare('INSERT INTO ' . $this->calendarChangesTableName .' (uri, synctoken, calendarid, operation) SELECT ?, synctoken, ?, ? FROM ' . $this->calendarTableName .' WHERE id = ?');
+        $stmt = $this->pdo->prepare('INSERT INTO ' . $this->calendarChangesTableName . ' (uri, synctoken, calendarid, operation) SELECT ?, synctoken, ?, ? FROM ' . $this->calendarTableName . ' WHERE id = ?');
         $stmt->execute([
             $objectUri,
             $calendarId,
@@ -985,7 +984,7 @@ SQL;
                 '{' . CalDAV\Plugin::NS_CALDAV . '}supported-calendar-component-set' => new CalDAV\Xml\Property\SupportedCalendarComponentSet(['VTODO', 'VEVENT']),
             ];
 
-            foreach($this->subscriptionPropertyMap as $xmlName=>$dbName) {
+            foreach($this->subscriptionPropertyMap as $xmlName => $dbName) {
                 if (!is_null($row[$dbName])) {
                     $subscription[$xmlName] = $row[$dbName];
                 }
@@ -1030,7 +1029,7 @@ SQL;
             ':lastmodified' => time(),
         ];
 
-        foreach($this->subscriptionPropertyMap as $xmlName=>$dbName) {
+        foreach($this->subscriptionPropertyMap as $xmlName => $dbName) {
             if (isset($properties[$xmlName])) {
 
                 $values[':' . $dbName] = $properties[$xmlName];
@@ -1038,7 +1037,7 @@ SQL;
             }
         }
 
-        $stmt = $this->pdo->prepare("INSERT INTO " . $this->calendarSubscriptionsTableName . " (".implode(', ', $fieldNames).") VALUES (".implode(', ',array_keys($values)).")");
+        $stmt = $this->pdo->prepare("INSERT INTO " . $this->calendarSubscriptionsTableName . " (" . implode(', ', $fieldNames) . ") VALUES (" . implode(', ', array_keys($values)) . ")");
         $stmt->execute($values);
 
         return $this->pdo->lastInsertId();
@@ -1070,7 +1069,7 @@ SQL;
 
             $newValues = [];
 
-            foreach($mutations as $propertyName=>$propertyValue) {
+            foreach($mutations as $propertyName => $propertyValue) {
 
                 if ($propertyName === '{http://calendarserver.org/ns/}source') {
                     $newValues['source'] = $propertyValue->getHref();
@@ -1083,11 +1082,11 @@ SQL;
 
             // Now we're generating the sql query.
             $valuesSql = [];
-            foreach($newValues as $fieldName=>$value) {
+            foreach($newValues as $fieldName => $value) {
                 $valuesSql[] = $fieldName . ' = ?';
             }
 
-            $stmt = $this->pdo->prepare("UPDATE " . $this->calendarSubscriptionsTableName . " SET " . implode(', ',$valuesSql) . ", lastmodified = ? WHERE id = ?");
+            $stmt = $this->pdo->prepare("UPDATE " . $this->calendarSubscriptionsTableName . " SET " . implode(', ', $valuesSql) . ", lastmodified = ? WHERE id = ?");
             $newValues['lastmodified'] = time();
             $newValues['id'] = $subscriptionId;
             $stmt->execute(array_values($newValues));
@@ -1129,7 +1128,7 @@ SQL;
      */
     function getSchedulingObject($principalUri, $objectUri) {
 
-        $stmt = $this->pdo->prepare('SELECT uri, calendardata, lastmodified, etag, size FROM '.$this->schedulingObjectTableName.' WHERE principaluri = ? AND uri = ?');
+        $stmt = $this->pdo->prepare('SELECT uri, calendardata, lastmodified, etag, size FROM ' . $this->schedulingObjectTableName . ' WHERE principaluri = ? AND uri = ?');
         $stmt->execute([$principalUri, $objectUri]);
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -1158,7 +1157,7 @@ SQL;
      */
     function getSchedulingObjects($principalUri) {
 
-        $stmt = $this->pdo->prepare('SELECT id, calendardata, uri, lastmodified, etag, size FROM '.$this->schedulingObjectTableName.' WHERE principaluri = ?');
+        $stmt = $this->pdo->prepare('SELECT id, calendardata, uri, lastmodified, etag, size FROM ' . $this->schedulingObjectTableName . ' WHERE principaluri = ?');
         $stmt->execute([$principalUri]);
 
         $result = [];
@@ -1185,7 +1184,7 @@ SQL;
      */
     function deleteSchedulingObject($principalUri, $objectUri) {
 
-        $stmt = $this->pdo->prepare('DELETE FROM '.$this->schedulingObjectTableName.' WHERE principaluri = ? AND uri = ?');
+        $stmt = $this->pdo->prepare('DELETE FROM ' . $this->schedulingObjectTableName . ' WHERE principaluri = ? AND uri = ?');
         $stmt->execute([$principalUri, $objectUri]);
 
     }
@@ -1200,7 +1199,7 @@ SQL;
      */
     function createSchedulingObject($principalUri, $objectUri, $objectData) {
 
-        $stmt = $this->pdo->prepare('INSERT INTO '.$this->schedulingObjectTableName.' (principaluri, calendardata, uri, lastmodified, etag, size) VALUES (?, ?, ?, ?, ?, ?)');
+        $stmt = $this->pdo->prepare('INSERT INTO ' . $this->schedulingObjectTableName . ' (principaluri, calendardata, uri, lastmodified, etag, size) VALUES (?, ?, ?, ?, ?, ?)');
         $stmt->execute([$principalUri, $objectData, $objectUri, time(), md5($objectData), strlen($objectData) ]);
 
     }

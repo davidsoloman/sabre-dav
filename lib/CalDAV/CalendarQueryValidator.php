@@ -29,7 +29,7 @@ class CalendarQueryValidator {
      * @param array $filters
      * @return bool
      */
-    function validate(VObject\Component\VCalendar $vObject,array $filters) {
+    function validate(VObject\Component\VCalendar $vObject, array $filters) {
 
         // The top level object is always a component filter.
         // We'll parse it manually, as it's pretty simple.
@@ -221,7 +221,7 @@ class CalendarQueryValidator {
             // for which the subfilters hold true.
             foreach($parent[$filter['name']]->getParts() as $paramPart) {
 
-                if($this->validateTextMatch($paramPart,$filter['text-match'])) {
+                if($this->validateTextMatch($paramPart, $filter['text-match'])) {
                     // We had a match, so this param-filter succeeds
                     continue 2;
                 }

@@ -6,7 +6,6 @@ use Sabre\Xml\Reader;
 use Sabre\Xml\XmlDeserializable;
 use Sabre\CalDAV\Plugin;
 
-
 /**
  * PropFilter parser.
  *
@@ -47,9 +46,9 @@ class ParamFilter implements XmlDeserializable {
     static function xmlDeserialize(Reader $reader) {
 
         $result = [
-            'name' => null,
+            'name'           => null,
             'is-not-defined' => false,
-            'text-match' => null,
+            'text-match'     => null,
         ];
 
         $att = $reader->parseAttributes();
@@ -66,7 +65,7 @@ class ParamFilter implements XmlDeserializable {
                     break;
                 case '{' . Plugin::NS_CALDAV . '}text-match' :
                     $result['text-match'] = [
-                        'negate-condition' => isset($elem['attributes']['negate-condition']) && $elem['attributes']['negate-condition']==='yes',
+                        'negate-condition' => isset($elem['attributes']['negate-condition']) && $elem['attributes']['negate-condition'] === 'yes',
                         'collation'        => isset($elem['attributes']['collation'])?$elem['attributes']['collation']:'i;ascii-casemap',
                         'value'            => $elem['value'],
                     ];

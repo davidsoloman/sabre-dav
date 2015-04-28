@@ -61,11 +61,11 @@ class Principal extends DAV\Xml\Property\Href {
     function __construct($type, $href = null) {
 
         $this->type = $type;
-        if ($type===self::HREF && is_null($href)) {
+        if ($type === self::HREF && is_null($href)) {
             throw new DAV\Exception('The href argument must be specified for the HREF principal type.');
         }
         if ($href) {
-            $href = rtrim($href,'/') . '/';
+            $href = rtrim($href, '/') . '/';
             parent::__construct($href);
         }
 

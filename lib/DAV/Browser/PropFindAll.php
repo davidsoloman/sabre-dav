@@ -116,8 +116,8 @@ class PropFindAll extends PropFind {
     function get404Properties() {
 
         $result = [];
-        foreach($this->result as $propertyName=>$stuff) {
-            if ($stuff[0]===404) {
+        foreach($this->result as $propertyName => $stuff) {
+            if ($stuff[0] === 404) {
                 $result[] = $propertyName;
             }
         }

@@ -2,10 +2,8 @@
 
 namespace Sabre\CardDAV\Xml\Filter;
 
-use
-    Sabre\Xml\Reader,
-    Sabre\Xml\XmlDeserializable;
-
+use Sabre\Xml\Reader;
+use Sabre\Xml\XmlDeserializable;
 
 /**
  * AddressData parser.

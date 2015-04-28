@@ -4,7 +4,6 @@ namespace Sabre\DAV\PropertyStorage\Backend;
 
 use Sabre\DAV\PropFind;
 use Sabre\DAV\PropPatch;
-
 use Sabre\DAV\Xml\Property\Complex;
 
 /**
@@ -118,7 +117,7 @@ class PDO implements BackendInterface {
             $updateStmt = $this->pdo->prepare("REPLACE INTO propertystorage (path, name, valuetype, value) VALUES (?, ?, ?, ?)");
             $deleteStmt = $this->pdo->prepare("DELETE FROM propertystorage WHERE path = ? AND name = ?");
 
-            foreach($properties as $name=>$value) {
+            foreach($properties as $name => $value) {
 
                 if (!is_null($value)) {
                     if (is_scalar($value)) {
@@ -195,12 +194,12 @@ class PDO implements BackendInterface {
 
             // Sanity check. SQL may select too many records, such as records
             // with different cases.
-            if ($row['path'] !== $source && strpos($row['path'], $source . '/')!==0) continue;
+            if ($row['path'] !== $source && strpos($row['path'], $source . '/') !== 0) continue;
 
-            $trailingPart = substr($row['path'], strlen($source)+1);
+            $trailingPart = substr($row['path'], strlen($source) + 1);
             $newPath = $destination;
             if ($trailingPart) {
-                $newPath.='/' . $trailingPart;
+                $newPath .= '/' . $trailingPart;
             }
             $update->execute([$newPath, $row['id']]);
 

@@ -71,7 +71,7 @@ class ExpandPropertyReport implements XmlDeserializable {
      * @param array $elems
      * @return void
      */
-    static private function traverse($elems) {
+    private static function traverse($elems) {
 
         $result = [];
 

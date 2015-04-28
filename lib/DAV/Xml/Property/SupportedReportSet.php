@@ -60,7 +60,7 @@ class SupportedReportSet implements XmlSerializable {
 
         foreach($report as $r) {
 
-            if (!preg_match('/^{([^}]*)}(.*)$/',$r))
+            if (!preg_match('/^{([^}]*)}(.*)$/', $r))
                 throw new DAV\Exception('Reportname must be in clark-notation');
 
             $this->reports[] = $r;

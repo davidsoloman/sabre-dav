@@ -192,15 +192,15 @@ class Invite implements Element {
 
         foreach($reader->parseInnerTree() as $elem) {
 
-            if ($elem['name']!==$cs.'user')
+            if ($elem['name'] !== $cs . 'user')
                 continue;
 
             $user = [
-                'href' => null,
+                'href'       => null,
                 'commonName' => null,
-                'readOnly' => null,
-                'summary' => null,
-                'status' => null,
+                'readOnly'   => null,
+                'summary'    => null,
+                'status'     => null,
             ];
 
             foreach($elem['value'] as $userElem) {

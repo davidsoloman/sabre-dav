@@ -2,15 +2,12 @@
 
 namespace Sabre\CalDAV\Subscriptions;
 
-use
-    Sabre\DAV\Collection,
-    Sabre\DAV\Xml\Property\Href,
-    Sabre\DAV\PropPatch,
-    Sabre\DAV\Exception\MethodNotAllowed,
-    Sabre\DAVACL\IACL,
-    Sabre\CalDAV\Backend\SubscriptionSupport;
-
-
+use Sabre\DAV\Collection;
+use Sabre\DAV\Xml\Property\Href;
+use Sabre\DAV\PropPatch;
+use Sabre\DAV\Exception\MethodNotAllowed;
+use Sabre\DAVACL\IACL;
+use Sabre\CalDAV\Backend\SubscriptionSupport;
 
 /**
  * Subscription Node
@@ -160,7 +157,7 @@ class Subscription extends Collection implements ISubscription, IACL {
                     $r[$prop] = new Href($this->subscriptionInfo['source'], false);
                     break;
                 default :
-                    if (array_key_exists($prop,$this->subscriptionInfo)) {
+                    if (array_key_exists($prop, $this->subscriptionInfo)) {
                         $r[$prop] = $this->subscriptionInfo[$prop];
                     }
                     break;

@@ -2,14 +2,13 @@
 
 namespace Sabre\CalDAV;
 
-use
-    DateTimeZone,
-    Sabre\DAV,
-    Sabre\VObject,
-    Sabre\HTTP\RequestInterface,
-    Sabre\HTTP\ResponseInterface,
-    Sabre\DAV\Exception\BadRequest,
-    DateTime;
+use DateTimeZone;
+use Sabre\DAV;
+use Sabre\VObject;
+use Sabre\HTTP\RequestInterface;
+use Sabre\HTTP\ResponseInterface;
+use Sabre\DAV\Exception\BadRequest;
+use DateTime;
 
 /**
  * ICS Exporter
@@ -63,10 +62,10 @@ class ICSExportPlugin extends DAV\ServerPlugin {
     function initialize(DAV\Server $server) {
 
         $this->server = $server;
-        $server->on('method:GET', [$this,'httpGet'], 90);
+        $server->on('method:GET', [$this, 'httpGet'], 90);
         $server->on('browserButtonActions', function($path, $node, &$actions) {
             if ($node instanceof ICalendar) {
-                $actions .= '<a href="' . htmlspecialchars($path, ENT_QUOTES, 'UTF-8'). '?export"><span class="oi" data-glyph="calendar"></span></a>';
+                $actions .= '<a href="' . htmlspecialchars($path, ENT_QUOTES, 'UTF-8') . '?export"><span class="oi" data-glyph="calendar"></span></a>';
             }
         });
 
@@ -179,22 +178,22 @@ class ICSExportPlugin extends DAV\ServerPlugin {
             // calendarQuery for speed.
             $calendarNode = $this->server->tree->getNodeForPath($path);
             $queryResult = $calendarNode->calendarQuery([
-                'name' => 'VCALENDAR',
+                'name'         => 'VCALENDAR',
                 'comp-filters' => [
                     [
-                        'name' => $componentType,
-                        'comp-filters' => [],
-                        'prop-filters' => [],
+                        'name'           => $componentType,
+                        'comp-filters'   => [],
+                        'prop-filters'   => [],
                         'is-not-defined' => false,
-                        'time-range' => [
+                        'time-range'     => [
                             'start' => $start,
-                            'end' => $end,
+                            'end'   => $end,
                         ],
                     ],
                 ],
-                'prop-filters' => [],
+                'prop-filters'   => [],
                 'is-not-defined' => false,
-                'time-range' => null,
+                'time-range'     => null,
             ]);
 
             // queryResult is just a list of base urls. We need to prefix the

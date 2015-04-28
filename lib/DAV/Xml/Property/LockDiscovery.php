@@ -2,13 +2,11 @@
 
 namespace Sabre\DAV\Xml\Property;
 
-use
-    Sabre\DAV,
-    Sabre\DAV\Locks\LockInfo,
-    Sabre\Xml\Element\XmlFragment,
-    Sabre\Xml\Writer,
-    Sabre\Xml\XmlSerializable;
-
+use Sabre\DAV;
+use Sabre\DAV\Locks\LockInfo;
+use Sabre\Xml\Element\XmlFragment;
+use Sabre\Xml\Writer;
+use Sabre\Xml\XmlSerializable;
 
 /**
  * Represents {DAV:}lockdiscovery property.
@@ -39,7 +37,7 @@ class LockDiscovery implements XmlSerializable {
      *
      * @var bool
      */
-    static public $hideLockRoot = false;
+    static $hideLockRoot = false;
 
     /**
      * __construct
@@ -92,7 +90,7 @@ class LockDiscovery implements XmlSerializable {
                 $writer->endElement(); // {DAV:}lockroot
             }
             $writer->writeElement('{DAV:}depth', ($lock->depth == DAV\Server::DEPTH_INFINITY?'infinity':$lock->depth));
-            $writer->writeElement('{DAV:}timeout','Second-' . $lock->timeout);
+            $writer->writeElement('{DAV:}timeout', 'Second-' . $lock->timeout);
 
             $writer->startElement('{DAV:}locktoken');
             $writer->writeElement('{DAV:}href', 'opaquelocktoken:' . $lock->token);
@@ -106,4 +104,3 @@ class LockDiscovery implements XmlSerializable {
     }
 
 }
-

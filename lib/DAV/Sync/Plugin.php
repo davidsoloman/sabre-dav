@@ -193,7 +193,7 @@ class Plugin extends DAV\ServerPlugin {
         $multiStatus = new DAV\Xml\Response\MultiStatus($responses, self::SYNCTOKEN_PREFIX . $syncToken);
 
         $this->server->httpResponse->setStatus(207);
-        $this->server->httpResponse->setHeader('Content-Type','application/xml; charset=utf-8');
+        $this->server->httpResponse->setHeader('Content-Type', 'application/xml; charset=utf-8');
         $this->server->httpResponse->setBody(
             $this->server->xml->write('{DAV:}multistatus', $multiStatus, $this->server->getBaseUri())
         );
@@ -228,11 +228,11 @@ class Plugin extends DAV\ServerPlugin {
      * @param mixed $conditions
      * @return void
      */
-    function validateTokens( RequestInterface $request, &$conditions ) {
+    function validateTokens(RequestInterface $request, &$conditions) {
 
-        foreach($conditions as $kk=>$condition) {
+        foreach($conditions as $kk => $condition) {
 
-            foreach($condition['tokens'] as $ii=>$token) {
+            foreach($condition['tokens'] as $ii => $token) {
 
                 // Sync-tokens must always start with our designated prefix.
                 if (substr($token['token'], 0, strlen(self::SYNCTOKEN_PREFIX)) !== self::SYNCTOKEN_PREFIX) {
@@ -277,4 +277,3 @@ class Plugin extends DAV\ServerPlugin {
     }
 
 }
-

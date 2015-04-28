@@ -146,7 +146,7 @@ class PropPatch {
             $this->result[$propertyName] = $resultCode;
         }
 
-        if ($resultCode>=400) {
+        if ($resultCode >= 400) {
             $this->failed = true;
         }
 
@@ -246,7 +246,7 @@ class PropPatch {
          */
         if ($this->failed) {
 
-            foreach($this->result as $propertyName=>$status) {
+            foreach($this->result as $propertyName => $status) {
                 if ($status === 202) {
                     // Failed dependency
                     $this->result[$propertyName] = 424;
@@ -287,7 +287,7 @@ class PropPatch {
             throw new UnexpectedValueException('A callback sent to handle() did not return an int or a bool');
         }
         $this->result[$propertyName] = $result;
-        if ($result>=400) {
+        if ($result >= 400) {
             $this->failed = true;
         }
 
@@ -325,7 +325,7 @@ class PropPatch {
         } elseif ($result === true) {
 
             // Success
-            foreach($argument as $propertyName=>$propertyValue) {
+            foreach($argument as $propertyName => $propertyValue) {
                 $this->result[$propertyName] = is_null($propertyValue)?204:200;
             }
 

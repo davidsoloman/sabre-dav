@@ -73,7 +73,7 @@ class SupportedAddressData implements XmlSerializable {
             $writer->startElement('{' . Plugin::NS_CARDDAV . '}address-data-type');
             $writer->writeAttributes([
                 'content-type' => $supported['contentType'],
-                'version' => $supported['version']
+                'version'      => $supported['version']
                 ]);
             $writer->endElement(); // address-data-type
         }

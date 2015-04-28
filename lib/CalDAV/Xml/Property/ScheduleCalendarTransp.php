@@ -84,10 +84,10 @@ class ScheduleCalendarTransp implements Element {
 
         switch($this->value) {
             case self::TRANSPARENT :
-                $writer->writeElement('{'.Plugin::NS_CALDAV.'}transparent');
+                $writer->writeElement('{' . Plugin::NS_CALDAV . '}transparent');
                 break;
             case self::OPAQUE :
-                $writer->writeElement('{'.Plugin::NS_CALDAV.'}opaque');
+                $writer->writeElement('{' . Plugin::NS_CALDAV . '}opaque');
                 break;
         }
 

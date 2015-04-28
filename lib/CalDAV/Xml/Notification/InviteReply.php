@@ -104,7 +104,7 @@ class InviteReply implements NotificationInterface {
             }
         }
 
-        foreach($values as $key=>$value) {
+        foreach($values as $key => $value) {
             if (!property_exists($this, $key)) {
                 throw new \InvalidArgumentException('Unknown option: ' . $key);
             }
@@ -134,7 +134,7 @@ class InviteReply implements NotificationInterface {
      */
     function xmlSerialize(Writer $writer) {
 
-        $writer->writeElement('{' . CalDAV\Plugin::NS_CALENDARSERVER .'}invite-reply');
+        $writer->writeElement('{' . CalDAV\Plugin::NS_CALENDARSERVER . '}invite-reply');
 
     }
 

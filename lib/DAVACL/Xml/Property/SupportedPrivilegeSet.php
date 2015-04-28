@@ -85,7 +85,7 @@ class SupportedPrivilegeSet implements XmlSerializable {
      * @param array $privilege
      * @return void
      */
-    private function serializePriv(Writer $writer,$privilege) {
+    private function serializePriv(Writer $writer, $privilege) {
 
         $writer->startElement('{DAV:}supported-privilege');
 

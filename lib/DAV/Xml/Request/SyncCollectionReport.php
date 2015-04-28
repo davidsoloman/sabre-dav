@@ -87,7 +87,7 @@ class SyncCollectionReport implements XmlDeserializable {
 
         foreach($required as $elem) {
             if (!array_key_exists($elem, $elems)) {
-                throw new BadRequest('The '.$elem.' element in the {DAV:}sync-collection report is required');
+                throw new BadRequest('The ' . $elem . ' element in the {DAV:}sync-collection report is required');
             }
         }
 
@@ -108,7 +108,7 @@ class SyncCollectionReport implements XmlDeserializable {
         if (isset($elems['{DAV:}sync-level'])) {
 
             $value = $elems['{DAV:}sync-level'];
-            if ($value==='infinity') {
+            if ($value === 'infinity') {
                 $value = \Sabre\DAV\Server::DEPTH_INFINITY;
             }
             $self->syncLevel = $value;

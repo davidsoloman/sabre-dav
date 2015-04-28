@@ -47,9 +47,9 @@ abstract class ParamFilter implements Element {
     static function xmlDeserialize(Reader $reader) {
 
         $result = [
-            'name' => null,
+            'name'           => null,
             'is-not-defined' => false,
-            'text-match' => null,
+            'text-match'     => null,
         ];
 
         $att = $reader->parseAttributes();
@@ -71,7 +71,7 @@ abstract class ParamFilter implements Element {
                         throw new BadRequest('Unknown match-type: ' . $matchType);
                     }
                     $result['text-match'] = [
-                        'negate-condition' => isset($elem['attributes']['negate-condition']) && $elem['attributes']['negate-condition']==='yes',
+                        'negate-condition' => isset($elem['attributes']['negate-condition']) && $elem['attributes']['negate-condition'] === 'yes',
                         'collation'        => isset($elem['attributes']['collation'])?$elem['attributes']['collation']:'i;unicode-casemap',
                         'value'            => $elem['value'],
                         'match-type'       => $matchType,

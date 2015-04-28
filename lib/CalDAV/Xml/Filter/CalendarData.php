@@ -8,7 +8,6 @@ use Sabre\DAV\Exception\BadRequest;
 use Sabre\CalDAV\Plugin;
 use Sabre\VObject\DateTimeParser;
 
-
 /**
  * CalendarData parser.
  *
@@ -20,7 +19,7 @@ use Sabre\VObject\DateTimeParser;
  * This element is used in three distinct places in the caldav spec, but in
  * this case, this element class only implements the calendar-data element as
  * it appears in a DAV:prop element, in a calendar-query or calendar-multiget
- * REPORT request. 
+ * REPORT request.
  *
  * @copyright Copyright (C) 2007-2015 fruux GmbH (https://fruux.com/).
  * @author Evert Pot (http://www.rooftopsolutions.nl/)
@@ -64,7 +63,7 @@ class CalendarData implements XmlDeserializable {
 
                     $result['expand'] = [
                         'start' => isset($elem['attributes']['start'])?DateTimeParser::parseDateTime($elem['attributes']['start']):null,
-                        'end' => isset($elem['attributes']['end'])?DateTimeParser::parseDateTime($elem['attributes']['end']):null,
+                        'end'   => isset($elem['attributes']['end'])?DateTimeParser::parseDateTime($elem['attributes']['end']):null,
                     ];
 
                     if (!$result['expand']['start'] || !$result['expand']['end']) {

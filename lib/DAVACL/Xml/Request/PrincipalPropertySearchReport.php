@@ -48,8 +48,8 @@ class PrincipalPropertySearchReport implements XmlDeserializable {
      * the properties (AND).
      *
      * This property is either "anyof" or "allof".
-     * 
-     * @var string 
+     *
+     * @var string
      */
     public $test;
 
@@ -80,7 +80,7 @@ class PrincipalPropertySearchReport implements XmlDeserializable {
 
         $foundSearchProp = false;
         $self->test = 'allof';
-        if ($reader->getAttribute('test')==='anyof') {
+        if ($reader->getAttribute('test') === 'anyof') {
             $self->test = 'anyof';
         }
 
@@ -105,7 +105,7 @@ class PrincipalPropertySearchReport implements XmlDeserializable {
                     if (!isset($elem['value']['{DAV:}prop']) || !isset($elem['value']['{DAV:}match'])) {
                         throw new BadRequest('The {DAV:}property-search element must contain one {DAV:}match and one {DAV:}prop element');
                     }
-                    foreach($elem['value']['{DAV:}prop'] as $propName=>$discard) {
+                    foreach($elem['value']['{DAV:}prop'] as $propName => $discard) {
                         $self->searchProperties[$propName] = $elem['value']['{DAV:}match'];
                     }
                     break;

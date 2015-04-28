@@ -61,7 +61,7 @@ class PropFind implements XmlDeserializable {
         $reader->pushContext();
         $reader->elementMap['{DAV:}prop'] = 'Sabre\Xml\Element\Elements';
 
-        foreach(KeyValue::xmlDeserialize($reader) as $k=>$v) {
+        foreach(KeyValue::xmlDeserialize($reader) as $k => $v) {
 
             switch($k) {
                 case '{DAV:}prop' :

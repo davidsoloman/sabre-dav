@@ -131,7 +131,7 @@ class PropFind {
             }
             return;
         }
-        if ($status!==404 && $this->result[$propertyName][0]===404) {
+        if ($status !== 404 && $this->result[$propertyName][0] === 404) {
             $this->itemsLeft--;
         } elseif ($status === 404 && $this->result[$propertyName][0] !== 404) {
             $this->itemsLeft++;
@@ -225,8 +225,8 @@ class PropFind {
             return [];
         }
         $result = [];
-        foreach($this->result as $propertyName=>$stuff) {
-            if ($stuff[0]===404) {
+        foreach($this->result as $propertyName => $stuff) {
+            if ($stuff[0] === 404) {
                 $result[] = $propertyName;
             }
         }
@@ -276,7 +276,7 @@ class PropFind {
             200 => [],
             404 => [],
         ];
-        foreach($this->result as $propertyName=>$info) {
+        foreach($this->result as $propertyName => $info) {
             if (!isset($r[$info[0]])) {
                 $r[$info[0]] = [$propertyName => $info[1]];
             } else {

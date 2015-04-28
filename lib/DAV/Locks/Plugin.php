@@ -2,10 +2,9 @@
 
 namespace Sabre\DAV\Locks;
 
-use
-    Sabre\DAV,
-    Sabre\HTTP\RequestInterface,
-    Sabre\HTTP\ResponseInterface;
+use Sabre\DAV;
+use Sabre\HTTP\RequestInterface;
+use Sabre\HTTP\ResponseInterface;
 
 /**
  * Locking plugin
@@ -99,7 +98,7 @@ class Plugin extends DAV\ServerPlugin {
         });
         $propFind->handle('{DAV:}lockdiscovery', function() use ($propFind) {
             return new DAV\Xml\Property\LockDiscovery(
-                $this->getLocks( $propFind->getPath() )
+                $this->getLocks($propFind->getPath())
             );
         });
 
@@ -224,7 +223,7 @@ class Plugin extends DAV\ServerPlugin {
             $lockInfo = $found;
 
             // The resource could have been locked through another uri.
-            if ($uri!=$lockInfo->uri) $uri = $lockInfo->uri;
+            if ($uri != $lockInfo->uri) $uri = $lockInfo->uri;
 
         }
 
@@ -245,15 +244,15 @@ class Plugin extends DAV\ServerPlugin {
         } catch (DAV\Exception\NotFound $e) {
 
             // It didn't, lets create it
-            $this->server->createFile($uri,fopen('php://memory','r'));
+            $this->server->createFile($uri, fopen('php://memory', 'r'));
             $newFile = true;
 
         }
 
-        $this->lockNode($uri,$lockInfo);
+        $this->lockNode($uri, $lockInfo);
 
-        $response->setHeader('Content-Type','application/xml; charset=utf-8');
-        $response->setHeader('Lock-Token','<opaquelocktoken:' . $lockInfo->token . '>');
+        $response->setHeader('Content-Type', 'application/xml; charset=utf-8');
+        $response->setHeader('Lock-Token', '<opaquelocktoken:' . $lockInfo->token . '>');
         $response->setStatus($newFile?201:200);
         $response->setBody($this->generateLockResponse($lockInfo));
 
@@ -285,14 +284,14 @@ class Plugin extends DAV\ServerPlugin {
 
         // Windows sometimes forgets to include < and > in the Lock-Token
         // header
-        if ($lockToken[0]!=='<') $lockToken = '<' . $lockToken . '>';
+        if ($lockToken[0] !== '<') $lockToken = '<' . $lockToken . '>';
 
         foreach($locks as $lock) {
 
             if ('<opaquelocktoken:' . $lock->token . '>' == $lockToken) {
 
-                $this->unlockNode($path,$lock);
-                $response->setHeader('Content-Length','0');
+                $this->unlockNode($path, $lock);
+                $response->setHeader('Content-Length', '0');
                 $response->setStatus(204);
 
                 // Returning false will break the method chain, and mark the
@@ -335,10 +334,10 @@ class Plugin extends DAV\ServerPlugin {
      * @param LockInfo $lockInfo
      * @return bool
      */
-    function lockNode($uri,LockInfo $lockInfo) {
+    function lockNode($uri, LockInfo $lockInfo) {
 
-        if (!$this->server->emit('beforeLock', [$uri,$lockInfo])) return;
-        return $this->locksBackend->lock($uri,$lockInfo);
+        if (!$this->server->emit('beforeLock', [$uri, $lockInfo])) return;
+        return $this->locksBackend->lock($uri, $lockInfo);
 
     }
 
@@ -353,8 +352,8 @@ class Plugin extends DAV\ServerPlugin {
      */
     function unlockNode($uri, LockInfo $lockInfo) {
 
-        if (!$this->server->emit('beforeUnlock', [$uri,$lockInfo])) return;
-        return $this->locksBackend->unlock($uri,$lockInfo);
+        if (!$this->server->emit('beforeUnlock', [$uri, $lockInfo])) return;
+        return $this->locksBackend->unlock($uri, $lockInfo);
 
     }
 
@@ -372,8 +371,8 @@ class Plugin extends DAV\ServerPlugin {
 
         if ($header) {
 
-            if (stripos($header,'second-')===0) $header = (int)(substr($header,7));
-            else if (stripos($header,'infinite')===0) $header = LockInfo::TIMEOUT_INFINITE;
+            if (stripos($header, 'second-') === 0) $header = (int)(substr($header, 7));
+            elseif (stripos($header, 'infinite') === 0) $header = LockInfo::TIMEOUT_INFINITE;
             else throw new DAV\Exception\BadRequest('Invalid HTTP timeout header');
 
         } else {
@@ -394,7 +393,7 @@ class Plugin extends DAV\ServerPlugin {
      */
     protected function generateLockResponse(LockInfo $lockInfo) {
 
-        return $this->server->xml->write('{DAV:}prop',[
+        return $this->server->xml->write('{DAV:}prop', [
             '{DAV:}lockdiscovery' =>
                 new DAV\Xml\Property\LockDiscovery([$lockInfo])
         ]);
@@ -413,7 +412,7 @@ class Plugin extends DAV\ServerPlugin {
      * @param mixed $conditions
      * @return void
      */
-    function validateTokens( RequestInterface $request, &$conditions ) {
+    function validateTokens(RequestInterface $request, &$conditions) {
 
         // First we need to gather a list of locks that must be satisfied.
         $mustLocks = [];
@@ -458,8 +457,8 @@ class Plugin extends DAV\ServerPlugin {
             case 'LOCK' :
                 //Temporary measure.. figure out later why this is needed
                 // Here we basically ignore all incoming tokens...
-                foreach($conditions as $ii=>$condition) {
-                    foreach($condition['tokens'] as $jj=>$token) {
+                foreach($conditions as $ii => $condition) {
+                    foreach($condition['tokens'] as $jj => $token) {
                         $conditions[$ii]['tokens'][$jj]['validToken'] = true;
                     }
                 }
@@ -473,16 +472,16 @@ class Plugin extends DAV\ServerPlugin {
         foreach($mustLocks as $lock) $tmp[$lock->token] = $lock;
         $mustLocks = array_values($tmp);
 
-        foreach($conditions as $kk=>$condition) {
+        foreach($conditions as $kk => $condition) {
 
-            foreach($condition['tokens'] as $ii=>$token) {
+            foreach($condition['tokens'] as $ii => $token) {
 
                 // Lock tokens always start with opaquelocktoken:
                 if (substr($token['token'], 0, 16) !== 'opaquelocktoken:') {
                     continue;
                 }
 
-                $checkToken = substr($token['token'],16);
+                $checkToken = substr($token['token'], 16);
                 // Looping through our list with locks.
                 foreach($mustLocks as $jj => $mustLock) {
 

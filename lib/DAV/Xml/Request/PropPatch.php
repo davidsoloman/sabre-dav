@@ -66,7 +66,7 @@ class PropPatch implements XmlDeserializable {
             if ($elem['name'] === '{DAV:}remove') {
 
                 // Ensuring there are no values.
-                foreach($elem['value']['{DAV:}prop'] as $remove=>$value) {
+                foreach($elem['value']['{DAV:}prop'] as $remove => $value) {
                     $self->properties[$remove] = null;
                 }
 

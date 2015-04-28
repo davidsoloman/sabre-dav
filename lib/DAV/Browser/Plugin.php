@@ -2,12 +2,11 @@
 
 namespace Sabre\DAV\Browser;
 
-use
-    Sabre\DAV,
-    Sabre\DAV\MkCol,
-    Sabre\HTTP\URLUtil,
-    Sabre\HTTP\RequestInterface,
-    Sabre\HTTP\ResponseInterface;
+use Sabre\DAV;
+use Sabre\DAV\MkCol;
+use Sabre\HTTP\URLUtil;
+use Sabre\HTTP\RequestInterface;
+use Sabre\HTTP\ResponseInterface;
 
 /**
  * Browser Plugin
@@ -47,7 +46,7 @@ class Plugin extends DAV\ServerPlugin {
      *
      * @param bool $enablePost
      */
-    function __construct($enablePost=true) {
+    function __construct($enablePost = true) {
 
         $this->enablePost = $enablePost;
 
@@ -62,10 +61,10 @@ class Plugin extends DAV\ServerPlugin {
     function initialize(DAV\Server $server) {
 
         $this->server = $server;
-        $this->server->on('method:GET', [$this,'httpGetEarly'], 90);
-        $this->server->on('method:GET', [$this,'httpGet'], 200);
-        $this->server->on('onHTMLActionsPanel', [$this, 'htmlActionsPanel'],200);
-        if ($this->enablePost) $this->server->on('method:POST', [$this,'httpPOST']);
+        $this->server->on('method:GET', [$this, 'httpGetEarly'], 90);
+        $this->server->on('method:GET', [$this, 'httpGet'], 200);
+        $this->server->on('onHTMLActionsPanel', [$this, 'htmlActionsPanel'], 200);
+        if ($this->enablePost) $this->server->on('method:POST', [$this, 'httpPOST']);
     }
 
     /**
@@ -79,8 +78,8 @@ class Plugin extends DAV\ServerPlugin {
     function httpGetEarly(RequestInterface $request, ResponseInterface $response) {
 
         $params = $request->getQueryParameters();
-        if (isset($params['sabreAction']) && $params['sabreAction']==='info') {
-            return $this->httpGet($request,$response);
+        if (isset($params['sabreAction']) && $params['sabreAction'] === 'info') {
+            return $this->httpGet($request, $response);
         }
 
     }
@@ -120,7 +119,7 @@ class Plugin extends DAV\ServerPlugin {
                 }
 
                 $response->setStatus(200);
-                $response->setHeader('Content-Type','text/html; charset=utf-8');
+                $response->setHeader('Content-Type', 'text/html; charset=utf-8');
 
                 $response->setBody(
                     $this->generateDirectoryIndex($request->getPath())
@@ -130,7 +129,7 @@ class Plugin extends DAV\ServerPlugin {
 
             case 'plugins' :
                 $response->setStatus(200);
-                $response->setHeader('Content-Type','text/html; charset=utf-8');
+                $response->setHeader('Content-Type', 'text/html; charset=utf-8');
 
                 $response->setBody(
                     $this->generatePluginListing()
@@ -174,7 +173,7 @@ class Plugin extends DAV\ServerPlugin {
                         list(, $folderName) = URLUtil::splitPath(trim($postVars['name']));
 
                         if (isset($postVars['resourceType'])) {
-                            $resourceType = explode(',',$postVars['resourceType']);
+                            $resourceType = explode(',', $postVars['resourceType']);
                         } else {
                             $resourceType = ['{DAV:}collection'];
                         }
@@ -217,7 +216,7 @@ class Plugin extends DAV\ServerPlugin {
                     list(, $newName) = URLUtil::splitPath($newName);
 
                     if (is_uploaded_file($file['tmp_name'])) {
-                        $this->server->createFile($uri . '/' . $newName, fopen($file['tmp_name'],'r'));
+                        $this->server->createFile($uri . '/' . $newName, fopen($file['tmp_name'], 'r'));
                     }
                     break;
                 // @codeCoverageIgnoreEnd
@@ -239,7 +238,7 @@ class Plugin extends DAV\ServerPlugin {
      */
     function escapeHTML($value) {
 
-        return htmlspecialchars($value,ENT_QUOTES,'UTF-8');
+        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
 
     }
 
@@ -256,8 +255,8 @@ class Plugin extends DAV\ServerPlugin {
         $node = $this->server->tree->getNodeForPath($path);
         if ($node instanceof DAV\ICollection) {
 
-            $html.="<section><h1>Nodes</h1>\n";
-            $html.="<table class=\"nodeTable\">";
+            $html .= "<section><h1>Nodes</h1>\n";
+            $html .= "<table class=\"nodeTable\">";
 
             $subNodes = $this->server->getPropertiesForChildren($path, [
                 '{DAV:}displayname',
@@ -267,7 +266,7 @@ class Plugin extends DAV\ServerPlugin {
                 '{DAV:}getlastmodified',
             ]);
 
-            foreach($subNodes as $subPath=>$subProps) {
+            foreach($subNodes as $subPath => $subProps) {
 
                 $subNode = $this->server->tree->getNodeForPath($subPath);
                 $fullPath = URLUtil::encodePath($this->server->getBaseUri() . $subPath);
@@ -288,19 +287,19 @@ class Plugin extends DAV\ServerPlugin {
                     $type = $this->mapResourceType($subProps['{DAV:}resourcetype']->getValue(), $subProps['subNode']);
                 }
 
-                $html.= '<tr>';
-                $html.= '<td class="nameColumn"><a href="' . $this->escapeHTML($subProps['fullPath']) . '"><span class="oi" data-glyph="'.$this->escapeHTML($type['icon']).'"></span> ' . $this->escapeHTML($subProps['displayPath']) . '</a></td>';
-                $html.= '<td class="typeColumn">' . $this->escapeHTML($type['string']) . '</td>';
-                $html.= '<td>';
+                $html .= '<tr>';
+                $html .= '<td class="nameColumn"><a href="' . $this->escapeHTML($subProps['fullPath']) . '"><span class="oi" data-glyph="' . $this->escapeHTML($type['icon']) . '"></span> ' . $this->escapeHTML($subProps['displayPath']) . '</a></td>';
+                $html .= '<td class="typeColumn">' . $this->escapeHTML($type['string']) . '</td>';
+                $html .= '<td>';
                 if (isset($subProps['{DAV:}getcontentlength'])) {
-                    $html.=$this->escapeHTML($subProps['{DAV:}getcontentlength'] . ' bytes');
+                    $html .= $this->escapeHTML($subProps['{DAV:}getcontentlength'] . ' bytes');
                 }
-                $html.= '</td><td>';
+                $html .= '</td><td>';
                 if (isset($subProps['{DAV:}getlastmodified'])) {
                     $lastMod = $subProps['{DAV:}getlastmodified']->getTime();
-                    $html.=$this->escapeHTML($lastMod->format('F j, Y, g:i a'));
+                    $html .= $this->escapeHTML($lastMod->format('F j, Y, g:i a'));
                 }
-                $html.= '</td>';
+                $html .= '</td>';
 
                 $buttonActions = '';
                 if ($subNode instanceof DAV\IFile) {
@@ -308,17 +307,17 @@ class Plugin extends DAV\ServerPlugin {
                 }
                 $this->server->emit('browserButtonActions', [$subProps['fullPath'], $subProps['subNode'], &$buttonActions]);
 
-                $html.= '<td>'. $buttonActions . '</td>';
-                $html.= '</tr>';
+                $html .= '<td>' . $buttonActions . '</td>';
+                $html .= '</tr>';
             }
 
-            $html.= '</table>';
+            $html .= '</table>';
 
         }
 
-        $html.="</section>";
-        $html.="<section><h1>Properties</h1>";
-        $html.="<table class=\"propTable\">";
+        $html .= "</section>";
+        $html .= "<section><h1>Properties</h1>";
+        $html .= "<table class=\"propTable\">";
 
         // Allprops request
         $propFind = new PropFindAll($path);
@@ -327,13 +326,13 @@ class Plugin extends DAV\ServerPlugin {
         $properties = $propFind->getResultForMultiStatus()[200];
 
         foreach($properties as $propName => $propValue) {
-            $html.=$this->drawPropertyRow($propName, $propValue);
+            $html .= $this->drawPropertyRow($propName, $propValue);
 
         }
 
 
-        $html.="</table>";
-        $html.="</section>";
+        $html .= "</table>";
+        $html .= "</section>";
 
         /* Start of generating actions */
 
@@ -344,14 +343,14 @@ class Plugin extends DAV\ServerPlugin {
 
         if ($output) {
 
-            $html.="<section><h1>Actions</h1>";
-            $html.="<div class=\"actions\">\n";
-            $html.=$output;
-            $html.="</div>\n";
-            $html.="</section>\n";
+            $html .= "<section><h1>Actions</h1>";
+            $html .= "<div class=\"actions\">\n";
+            $html .= $output;
+            $html .= "</div>\n";
+            $html .= "</section>\n";
         }
 
-        $html.=$this->generateFooter();
+        $html .= $this->generateFooter();
 
         $this->server->httpResponse->setHeader('Content-Security-Policy', "img-src 'self'; style-src 'self';");
 
@@ -368,24 +367,24 @@ class Plugin extends DAV\ServerPlugin {
 
         $html = $this->generateHeader('Plugins');
 
-        $html.="<section><h1>Plugins</h1>";
-        $html.="<table class=\"propTable\">";
+        $html .= "<section><h1>Plugins</h1>";
+        $html .= "<table class=\"propTable\">";
         foreach($this->server->getPlugins() as $plugin) {
             $info = $plugin->getPluginInfo();
-            $html.='<tr><th>' . $info['name'] . '</th>';
-            $html.='<td>' . $info['description'] . '</td>';
-            $html.='<td>';
+            $html .= '<tr><th>' . $info['name'] . '</th>';
+            $html .= '<td>' . $info['description'] . '</td>';
+            $html .= '<td>';
             if (isset($info['link']) && $info['link']) {
-                $html.='<a href="' . $this->escapeHTML($info['link']) . '"><span class="oi" data-glyph="book"></span></a>';
+                $html .= '<a href="' . $this->escapeHTML($info['link']) . '"><span class="oi" data-glyph="book"></span></a>';
             }
-            $html.='</td></tr>';
+            $html .= '</td></tr>';
         }
-        $html.="</table>";
-        $html.="</section>";
+        $html .= "</table>";
+        $html .= "</section>";
 
         /* Start of generating actions */
 
-        $html.=$this->generateFooter();
+        $html .= $this->generateFooter();
 
         return $html;
 
@@ -428,14 +427,14 @@ HTML;
         if ($path)  {
             list($parentUri) = URLUtil::splitPath($path);
             $fullPath = URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
-            $html.='<a href="' . $fullPath . '" class="btn">⇤ Go to parent</a>';
+            $html .= '<a href="' . $fullPath . '" class="btn">⇤ Go to parent</a>';
         } else {
-            $html.='<span class="btn disabled">⇤ Go to parent</span>';
+            $html .= '<span class="btn disabled">⇤ Go to parent</span>';
         }
 
-        $html.= ' <a href="?sabreAction=plugins" class="btn"><span class="oi" data-glyph="puzzle-piece"></span> Plugins</a>';
+        $html .= ' <a href="?sabreAction=plugins" class="btn"><span class="oi" data-glyph="puzzle-piece"></span> Plugins</a>';
 
-        $html.="</nav>";
+        $html .= "</nav>";
 
         return $html;
 
@@ -470,7 +469,7 @@ HTML;
 
         // We also know fairly certain that if an object is a non-extended
         // SimpleCollection, we won't need to show the panel either.
-        if (get_class($node)==='Sabre\\DAV\\SimpleCollection')
+        if (get_class($node) === 'Sabre\\DAV\\SimpleCollection')
             return;
 
         ob_start();
@@ -489,7 +488,7 @@ HTML;
         </form>
         ';
 
-        $output.=ob_get_clean();
+        $output .= ob_get_clean();
 
     }
 
@@ -544,10 +543,10 @@ HTML;
         $map = [
             'ico'  => 'image/vnd.microsoft.icon',
             'png'  => 'image/png',
-            'css'  =>  'text/css',
+            'css'  => 'text/css',
         ];
 
-        $ext = substr($assetName, strrpos($assetName, '.')+1);
+        $ext = substr($assetName, strrpos($assetName, '.') + 1);
         if (isset($map[$ext])) {
             $mime = $map[$ext];
         }
@@ -556,7 +555,7 @@ HTML;
         $this->server->httpResponse->setHeader('Content-Length', filesize($assetPath));
         $this->server->httpResponse->setHeader('Cache-Control', 'public, max-age=1209600');
         $this->server->httpResponse->setStatus(200);
-        $this->server->httpResponse->setBody(fopen($assetPath,'r'));
+        $this->server->httpResponse->setBody(fopen($assetPath, 'r'));
 
     }
 
@@ -658,16 +657,16 @@ HTML;
 
         $info = [
             'string' => [],
-            'icon' => 'cog',
+            'icon'   => 'cog',
         ];
-        foreach($resourceTypes as $k=> $resourceType) {
+        foreach($resourceTypes as $k => $resourceType) {
             if (isset($types[$resourceType])) {
                 $info['string'][] = $types[$resourceType]['string'];
             } else {
                 $info['string'][] = $resourceType;
             }
         }
-        foreach($types as $key=>$resourceInfo) {
+        foreach($types as $key => $resourceInfo) {
             if (in_array($key, $resourceTypes)) {
                 $info['icon'] = $resourceInfo['icon'];
                 break;
@@ -694,17 +693,17 @@ HTML;
         } elseif($value instanceof \Sabre\Xml\XmlSerializable) {
 
             $mapping = [
-                'Sabre\\DAV\\Xml\\Property\\Href' => 'href',
-                'Sabre\\DAV\\Xml\\Property\\SupportedMethodSet' => 'valuelist',
-                'Sabre\\DAV\\Xml\\Property\\ResourceType' => 'xmlvaluelist',
-                'Sabre\\DAV\\Xml\\Property\\SupportedReportSet' => 'xmlvaluelist',
+                'Sabre\\DAV\\Xml\\Property\\Href'                       => 'href',
+                'Sabre\\DAV\\Xml\\Property\\SupportedMethodSet'         => 'valuelist',
+                'Sabre\\DAV\\Xml\\Property\\ResourceType'               => 'xmlvaluelist',
+                'Sabre\\DAV\\Xml\\Property\\SupportedReportSet'         => 'xmlvaluelist',
                 'Sabre\\DAVACL\\Xml\\Property\\CurrentUserPrivilegeSet' => 'xmlvaluelist',
-                'Sabre\\DAVACL\\Xml\\Property\\SupportedPrivilegeSet' => 'supported-privilege-set',
-                'Sabre\\Xml\\XmlSerializable' => 'xml',
+                'Sabre\\DAVACL\\Xml\\Property\\SupportedPrivilegeSet'   => 'supported-privilege-set',
+                'Sabre\\Xml\\XmlSerializable'                           => 'xml',
             ];
 
             $view = 'complex';
-            foreach($mapping as $class=>$val) {
+            foreach($mapping as $class => $val) {
                 if ($value instanceof $class) {
                     $view = $val;
                     break;
@@ -736,7 +735,7 @@ HTML;
 
             case 'href' :
                 echo implode('<br />', array_map(function($href) {
-                    if (stripos($href,'mailto:')===0 || stripos($href,'/')===0 || stripos($href,'http:')===0 || stripos($href,'https:') === 0) {
+                    if (stripos($href, 'mailto:') === 0 || stripos($href, '/') === 0 || stripos($href, 'http:') === 0 || stripos($href, 'https:') === 0) {
                         return "<a href=\"" . $this->escapeHTML($href) . '">' . $this->escapeHTML($href) . '</a>';
                     } else {
                         return "<a href=\"" . $this->escapeHTML($this->server->getBaseUri() . $href) . '">' . $this->escapeHTML($this->server->getBaseUri() . $href) . '</a>';

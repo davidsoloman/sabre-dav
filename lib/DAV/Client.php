@@ -184,21 +184,21 @@ class Client extends HTTP\Client {
             ) = \Sabre\Xml\Service::parseClarkNotation($property);
 
             if ($namespace === 'DAV:') {
-                $element = $dom->createElement('d:'.$elementName);
+                $element = $dom->createElement('d:' . $elementName);
             } else {
-                $element = $dom->createElementNS($namespace, 'x:'.$elementName);
+                $element = $dom->createElementNS($namespace, 'x:' . $elementName);
             }
 
-            $prop->appendChild( $element );
+            $prop->appendChild($element);
         }
 
-        $dom->appendChild($root)->appendChild( $prop );
+        $dom->appendChild($root)->appendChild($prop);
         $body = $dom->saveXML();
 
         $url = $this->getAbsoluteUrl($url);
 
         $request = new HTTP\Request('PROPFIND', $url, [
-            'Depth' => $depth,
+            'Depth'        => $depth,
             'Content-Type' => 'application/xml'
         ], $body);
 
@@ -211,7 +211,7 @@ class Client extends HTTP\Client {
         $result = $this->parseMultiStatus($response->getBodyAsString());
 
         // If depth was 0, we only return the top item
-        if ($depth===0) {
+        if ($depth === 0) {
             reset($result);
             $result = current($result);
             return isset($result[200])?$result[200]:[];
@@ -258,12 +258,12 @@ class Client extends HTTP\Client {
                 $prop = $dom->createElement('d:prop');
 
                 if ($namespace === 'DAV:') {
-                    $element = $dom->createElement('d:'.$elementName);
+                    $element = $dom->createElement('d:' . $elementName);
                 } else {
-                    $element = $dom->createElementNS($namespace, 'x:'.$elementName);
+                    $element = $dom->createElementNS($namespace, 'x:' . $elementName);
                 }
 
-                $root->appendChild( $remove )->appendChild( $prop )->appendChild( $element );
+                $root->appendChild($remove)->appendChild($prop)->appendChild($element);
 
             } else {
 
@@ -271,18 +271,18 @@ class Client extends HTTP\Client {
                 $prop = $dom->createElement('d:prop');
 
                 if ($namespace === 'DAV:') {
-                    $element = $dom->createElement('d:'.$elementName);
+                    $element = $dom->createElement('d:' . $elementName);
                 } else {
-                    $element = $dom->createElementNS($namespace, 'x:'.$elementName);
+                    $element = $dom->createElementNS($namespace, 'x:' . $elementName);
                 }
 
-                if ( $propValue instanceof Property ) {
-                    $propValue->serialize( new Server, $element );
+                if ($propValue instanceof Property) {
+                    $propValue->serialize(new Server(), $element);
                 } else {
                     $element->nodeValue = htmlspecialchars($propValue, ENT_NOQUOTES, 'UTF-8');
                 }
 
-                $root->appendChild( $set )->appendChild( $prop )->appendChild( $element );
+                $root->appendChild($set)->appendChild($prop)->appendChild($element);
 
             }
 
@@ -360,9 +360,9 @@ class Client extends HTTP\Client {
 
         $response = $this->send(new HTTP\Request($method, $url, $headers, $body));
         return [
-            'body' => $response->getBodyAsString(),
+            'body'       => $response->getBodyAsString(),
             'statusCode' => (int)$response->getStatus(),
-            'headers' => array_change_key_case($response->getHeaders()),
+            'headers'    => array_change_key_case($response->getHeaders()),
         ];
 
     }
@@ -383,7 +383,7 @@ class Client extends HTTP\Client {
 
         // If the url starts with a slash, we must calculate the url based off
         // the root of the base url.
-        if (strpos($url,'/') === 0) {
+        if (strpos($url, '/') === 0) {
             $parts = parse_url($this->baseUri);
             return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port'])?':' . $parts['port']:'') . $url;
         }

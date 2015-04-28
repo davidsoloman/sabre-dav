@@ -2,12 +2,11 @@
 
 namespace Sabre\CalDAV;
 
-use
-    Sabre\DAV,
-    Sabre\DAV\Exception\NotFound,
-    Sabre\DAV\MkCol,
-    Sabre\DAVACL,
-    Sabre\HTTP\URLUtil;
+use Sabre\DAV;
+use Sabre\DAV\Exception\NotFound;
+use Sabre\DAV\MkCol;
+use Sabre\DAVACL;
+use Sabre\HTTP\URLUtil;
 
 /**
  * The CalendarHome represents a node that is usually in a users'
@@ -57,7 +56,7 @@ class CalendarHome implements DAV\IExtendedCollection, DAVACL\IACL {
      */
     function getName() {
 
-        list(,$name) = URLUtil::splitPath($this->principalInfo['uri']);
+        list(, $name) = URLUtil::splitPath($this->principalInfo['uri']);
         return $name;
 
     }
@@ -105,7 +104,7 @@ class CalendarHome implements DAV\IExtendedCollection, DAVACL\IACL {
      * @param resource $data
      * @return void
      */
-    function createFile($filename, $data=null) {
+    function createFile($filename, $data = null) {
 
         throw new DAV\Exception\MethodNotAllowed('Creating new files in this collection is not supported');
 

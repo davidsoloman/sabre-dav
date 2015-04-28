@@ -90,7 +90,7 @@ class CalendarMultiGetReport implements XmlDeserializable {
         ]);
 
         $newProps = [
-            'hrefs' => [],
+            'hrefs'      => [],
             'properties' => [],
         ];
 
@@ -101,7 +101,7 @@ class CalendarMultiGetReport implements XmlDeserializable {
                 case '{DAV:}prop' :
                     $newProps['properties'] = array_keys($elem['value']);
                     if (isset($elem['value']['{' . Plugin::NS_CALDAV . '}calendar-data'])) {
-                        $newProps+=$elem['value']['{' . Plugin::NS_CALDAV . '}calendar-data'];
+                        $newProps += $elem['value']['{' . Plugin::NS_CALDAV . '}calendar-data'];
                     }
                     break;
                 case '{DAV:}href' :
@@ -113,7 +113,7 @@ class CalendarMultiGetReport implements XmlDeserializable {
         }
 
         $obj = new self();
-        foreach($newProps as $key=>$value) {
+        foreach($newProps as $key => $value) {
             $obj->$key = $value;
         }
 
