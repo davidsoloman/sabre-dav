@@ -11,6 +11,7 @@ ChangeLog
 * Some nodes that by default showed the current time as their last
   modification time, now no longer has a last modification time.
 * CardDAV namespace was missing from default namespaceMap.
+* Using php-cs-fixer for automated coding standards enforcement and fixing.
 
 
 2.2.0-alpha4 (2015-04-13)
