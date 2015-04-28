@@ -423,7 +423,7 @@ class Plugin extends DAV\ServerPlugin {
                 'privilege'  => $priv['privilege'],
                 'abstract'   => isset($priv['abstract']) && $priv['abstract'],
                 'aggregates' => [],
-                'concrete'   => isset($priv['abstract']) && $priv['abstract']?$concrete:$priv['privilege'],
+                'concrete'   => isset($priv['abstract']) && $priv['abstract'] ? $concrete : $priv['privilege'],
             ];
 
             if (isset($priv['aggregates'])) {

@@ -66,7 +66,7 @@ class ParamFilter implements XmlDeserializable {
                 case '{' . Plugin::NS_CALDAV . '}text-match' :
                     $result['text-match'] = [
                         'negate-condition' => isset($elem['attributes']['negate-condition']) && $elem['attributes']['negate-condition'] === 'yes',
-                        'collation'        => isset($elem['attributes']['collation'])?$elem['attributes']['collation']:'i;ascii-casemap',
+                        'collation'        => isset($elem['attributes']['collation']) ? $elem['attributes']['collation'] : 'i;ascii-casemap',
                         'value'            => $elem['value'],
                     ];
                     break;

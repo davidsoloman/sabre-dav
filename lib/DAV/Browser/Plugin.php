@@ -100,13 +100,13 @@ class Plugin extends DAV\ServerPlugin {
         // CSP headers
         $this->server->httpResponse->setHeader('Content-Security-Policy', "img-src 'self'; style-src 'self';");
 
-        $sabreAction = isset($getVars['sabreAction'])?$getVars['sabreAction']:null;
+        $sabreAction = isset($getVars['sabreAction']) ? $getVars['sabreAction'] : null;
 
         switch($sabreAction) {
 
             case 'asset' :
                 // Asset handling, such as images
-                $this->serveAsset(isset($getVars['assetName'])?$getVars['assetName']:null);
+                $this->serveAsset(isset($getVars['assetName']) ? $getVars['assetName'] : null);
                 return false;
             default :
             case 'info' :
@@ -250,7 +250,7 @@ class Plugin extends DAV\ServerPlugin {
      */
     function generateDirectoryIndex($path) {
 
-        $html = $this->generateHeader($path?$path:'/', $path);
+        $html = $this->generateHeader($path ? $path : '/', $path);
 
         $node = $this->server->tree->getNodeForPath($path);
         if ($node instanceof DAV\ICollection) {

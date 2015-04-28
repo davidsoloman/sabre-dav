@@ -70,7 +70,7 @@ class File extends AbstractDigest {
      */
     function getDigestHash($realm, $username) {
 
-        return isset($this->users[$realm . ':' . $username])?$this->users[$realm . ':' . $username]:false;
+        return isset($this->users[$realm . ':' . $username]) ? $this->users[$realm . ':' . $username] : false;
 
     }
 

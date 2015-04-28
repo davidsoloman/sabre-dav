@@ -88,7 +88,7 @@ class PropFindAll extends PropFind {
      */
     function get($propertyName) {
 
-        return isset($this->result[$propertyName])?$this->result[$propertyName][1]:null;
+        return isset($this->result[$propertyName]) ? $this->result[$propertyName][1] : null;
 
     }
 
@@ -103,7 +103,7 @@ class PropFindAll extends PropFind {
      */
     function getStatus($propertyName) {
 
-        return isset($this->result[$propertyName])?$this->result[$propertyName][0]:404;
+        return isset($this->result[$propertyName]) ? $this->result[$propertyName][0] : 404;
 
     }
 

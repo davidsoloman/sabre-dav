@@ -164,10 +164,10 @@ class PDO extends AbstractBackend implements SyncSupport, SubscriptionSupport, S
                 'id'                                                                 => $row['id'],
                 'uri'                                                                => $row['uri'],
                 'principaluri'                                                       => $row['principaluri'],
-                '{' . CalDAV\Plugin::NS_CALENDARSERVER . '}getctag'                  => 'http://sabre.io/ns/sync/' . ($row['synctoken']?$row['synctoken']:'0'),
-                '{http://sabredav.org/ns}sync-token'                                 => $row['synctoken']?$row['synctoken']:'0',
+                '{' . CalDAV\Plugin::NS_CALENDARSERVER . '}getctag'                  => 'http://sabre.io/ns/sync/' . ($row['synctoken'] ? $row['synctoken'] : '0'),
+                '{http://sabredav.org/ns}sync-token'                                 => $row['synctoken'] ? $row['synctoken'] : '0',
                 '{' . CalDAV\Plugin::NS_CALDAV . '}supported-calendar-component-set' => new CalDAV\Xml\Property\SupportedCalendarComponentSet($components),
-                '{' . CalDAV\Plugin::NS_CALDAV . '}schedule-calendar-transp'         => new CalDAV\Xml\Property\ScheduleCalendarTransp($row['transparent']?'transparent':'opaque'),
+                '{' . CalDAV\Plugin::NS_CALDAV . '}schedule-calendar-transp'         => new CalDAV\Xml\Property\ScheduleCalendarTransp($row['transparent'] ? 'transparent' : 'opaque'),
             ];
 
 

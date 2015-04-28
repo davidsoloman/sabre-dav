@@ -99,7 +99,7 @@ class PropPatch {
             // If the original argument to this method was a string, we need
             // to also make sure that it stays that way, so the commit function
             // knows how to format the arguments to the callback.
-            is_string($properties)?$properties:$usedProperties,
+            is_string($properties) ? $properties : $usedProperties,
             $callback
         ];
 
@@ -326,7 +326,7 @@ class PropPatch {
 
             // Success
             foreach($argument as $propertyName => $propertyValue) {
-                $this->result[$propertyName] = is_null($propertyValue)?204:200;
+                $this->result[$propertyName] = is_null($propertyValue) ? 204 : 200;
             }
 
         } elseif ($result === false) {

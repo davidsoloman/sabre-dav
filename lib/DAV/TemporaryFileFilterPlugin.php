@@ -217,7 +217,7 @@ class TemporaryFileFilterPlugin extends ServerPlugin {
         }
 
         file_put_contents($tempLocation, $this->server->httpRequest->getBody());
-        $hR->setStatus($newFile?201:200);
+        $hR->setStatus($newFile ? 201 : 200);
         return false;
 
     }

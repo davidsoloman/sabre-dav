@@ -149,7 +149,7 @@ class Card extends DAV\File implements ICard, DAVACL\IACL {
      */
     function getLastModified() {
 
-        return isset($this->cardData['lastmodified'])?$this->cardData['lastmodified']:null;
+        return isset($this->cardData['lastmodified']) ? $this->cardData['lastmodified'] : null;
 
     }
 

@@ -610,8 +610,8 @@ class Server extends EventEmitter {
         if ($matches[1] === '' && $matches[2] === '') return null;
 
         return [
-            $matches[1] !== ''?$matches[1]:null,
-            $matches[2] !== ''?$matches[2]:null,
+            $matches[1] !== '' ? $matches[1] : null,
+            $matches[2] !== '' ? $matches[2] : null,
         ];
 
     }
@@ -871,7 +871,7 @@ class Server extends EventEmitter {
         foreach($this->tree->getChildren($path) as $childNode) {
             $subPropFind = clone $propFind;
             $subPropFind->setDepth($newDepth);
-            $subPath = $path? $path . '/' . $childNode->getName() : $childNode->getName();
+            $subPath = $path ? $path . '/' . $childNode->getName() : $childNode->getName();
             $subPropFind->setPath($subPath);
 
             $propFindRequests[] = [
@@ -907,7 +907,7 @@ class Server extends EventEmitter {
 
         $path = trim($path, '/');
 
-        $propFindType = $propertyNames?PropFind::NORMAL:PropFind::ALLPROPS;
+        $propFindType = $propertyNames ? PropFind::NORMAL : PropFind::ALLPROPS;
         $propFind = new PropFind($path, (array)$propertyNames, $depth, $propFindType);
 
         $parentNode = $this->tree->getNodeForPath($path);
@@ -1532,9 +1532,9 @@ class Server extends EventEmitter {
             // conditions for the previous uri.
             if (!$match['uri'] && count($conditions)) {
                 $conditions[count($conditions) - 1]['tokens'][] = [
-                    'negate' => $match['not']?true:false,
+                    'negate' => $match['not'] ? true : false,
                     'token'  => $match['token'],
-                    'etag'   => isset($match['etag'])?$match['etag']:''
+                    'etag'   => isset($match['etag']) ? $match['etag'] : ''
                 ];
             } else {
 
@@ -1548,9 +1548,9 @@ class Server extends EventEmitter {
                     'uri'    => $realUri,
                     'tokens' => [
                         [
-                            'negate' => $match['not']?true:false,
+                            'negate' => $match['not'] ? true : false,
                             'token'  => $match['token'],
-                            'etag'   => isset($match['etag'])?$match['etag']:''
+                            'etag'   => isset($match['etag']) ? $match['etag'] : ''
                         ]
                     ],
 

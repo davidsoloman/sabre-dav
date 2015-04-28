@@ -67,8 +67,8 @@ class FreeBusyQueryReport implements XmlDeserializable {
 
             if ($elem['name'] !== $timeRange) continue;
 
-            $start = empty($elem['attributes']['start'])?:$elem['attributes']['start'];
-            $end = empty($elem['attributes']['end'])?:$elem['attributes']['end'];
+            $start = empty($elem['attributes']['start']) ?: $elem['attributes']['start'];
+            $end = empty($elem['attributes']['end']) ?: $elem['attributes']['end'];
 
         }
         if (!$start && !$end) {

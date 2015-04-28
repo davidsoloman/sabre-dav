@@ -161,7 +161,7 @@ class Plugin extends DAV\ServerPlugin {
         $body = $this->server->httpRequest->getBody();
 
 
-        $etag = $node->patch($body, $range[0], isset($range[1])?$range[1]:null);
+        $etag = $node->patch($body, $range[0], isset($range[1]) ? $range[1] : null);
 
         $this->server->emit('afterWriteContent', [$path, $node]);
 
@@ -206,7 +206,7 @@ class Plugin extends DAV\ServerPlugin {
         if ($matches[1] === 'append') {
             return [self::RANGE_APPEND];
         } elseif (strlen($matches[2]) > 0) {
-            return [self::RANGE_START, $matches[2], $matches[3]?:null];
+            return [self::RANGE_START, $matches[2], $matches[3] ?: null];
         } else {
             return [self::RANGE_END, $matches[4]];
         }

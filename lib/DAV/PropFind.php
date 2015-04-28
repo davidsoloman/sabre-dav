@@ -148,7 +148,7 @@ class PropFind {
      */
     function get($propertyName) {
 
-        return isset($this->result[$propertyName])?$this->result[$propertyName][1]:null;
+        return isset($this->result[$propertyName]) ? $this->result[$propertyName][1] : null;
 
     }
 
@@ -163,7 +163,7 @@ class PropFind {
      */
     function getStatus($propertyName) {
 
-        return isset($this->result[$propertyName])?$this->result[$propertyName][0]:null;
+        return isset($this->result[$propertyName]) ? $this->result[$propertyName][0] : null;
 
     }
 

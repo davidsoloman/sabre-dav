@@ -109,7 +109,7 @@ class Client extends HTTP\Client {
 
         if (isset($settings['userName'])) {
             $userName = $settings['userName'];
-            $password = isset($settings['password'])?$settings['password']:'';
+            $password = isset($settings['password']) ? $settings['password'] : '';
 
             if (isset($settings['authType'])) {
                 $curlType = 0;
@@ -214,13 +214,13 @@ class Client extends HTTP\Client {
         if ($depth === 0) {
             reset($result);
             $result = current($result);
-            return isset($result[200])?$result[200]:[];
+            return isset($result[200]) ? $result[200] : [];
         }
 
         $newResult = [];
         foreach($result as $href => $statusList) {
 
-            $newResult[$href] = isset($statusList[200])?$statusList[200]:[];
+            $newResult[$href] = isset($statusList[200]) ? $statusList[200] : [];
 
         }
 
@@ -385,7 +385,7 @@ class Client extends HTTP\Client {
         // the root of the base url.
         if (strpos($url, '/') === 0) {
             $parts = parse_url($this->baseUri);
-            return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port'])?':' . $parts['port']:'') . $url;
+            return $parts['scheme'] . '://' . $parts['host'] . (isset($parts['port']) ? ':' . $parts['port'] : '') . $url;
         }
 
         // Otherwise...

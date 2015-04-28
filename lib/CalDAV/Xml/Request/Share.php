@@ -96,7 +96,7 @@ class Share implements XmlDeserializable {
                     $set[] = [
                         'href'       => $sharee['{DAV:}href'],
                         'commonName' => $sharee['{' . Plugin::NS_CALENDARSERVER . '}common-name'],
-                        'summary'    => isset($sharee[$sumElem])?$sharee[$sumElem]:null,
+                        'summary'    => isset($sharee[$sumElem]) ? $sharee[$sumElem] : null,
                         'readOnly'   => isset($sharee['{' . Plugin::NS_CALENDARSERVER . '}readOnly']),
                     ];
                     break;

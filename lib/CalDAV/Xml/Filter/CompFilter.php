@@ -78,8 +78,8 @@ class CompFilter implements XmlDeserializable {
                         throw new BadRequest('You cannot add time-range filters on the VCALENDAR component');
                     }
                     $result['time-range'] = [
-                        'start' => isset($elem['attributes']['start'])?DateTimeParser::parseDateTime($elem['attributes']['start']):null,
-                        'end'   => isset($elem['attributes']['end'])?DateTimeParser::parseDateTime($elem['attributes']['end']):null,
+                        'start' => isset($elem['attributes']['start']) ? DateTimeParser::parseDateTime($elem['attributes']['start']) : null,
+                        'end'   => isset($elem['attributes']['end']) ? DateTimeParser::parseDateTime($elem['attributes']['end']) : null,
                     ];
                     if($result['time-range']['start'] && $result['time-range']['end'] && $result['time-range']['end'] <= $result['time-range']['start']) {
                         throw new BadRequest('The end-date must be larger than the start-date');

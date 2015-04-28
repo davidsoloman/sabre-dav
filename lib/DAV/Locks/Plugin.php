@@ -253,7 +253,7 @@ class Plugin extends DAV\ServerPlugin {
 
         $response->setHeader('Content-Type', 'application/xml; charset=utf-8');
         $response->setHeader('Lock-Token', '<opaquelocktoken:' . $lockInfo->token . '>');
-        $response->setStatus($newFile?201:200);
+        $response->setStatus($newFile ? 201 : 200);
         $response->setBody($this->generateLockResponse($lockInfo));
 
         // Returning false will interupt the event chain and mark this method

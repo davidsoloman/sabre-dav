@@ -65,14 +65,14 @@ abstract class ParamFilter implements Element {
                     $result['is-not-defined'] = true;
                     break;
                 case '{' . Plugin::NS_CARDDAV . '}text-match' :
-                    $matchType = isset($elem['attributes']['match-type'])?$elem['attributes']['match-type']:'contains';
+                    $matchType = isset($elem['attributes']['match-type']) ? $elem['attributes']['match-type'] : 'contains';
 
                     if (!in_array($matchType, ['contains', 'equals', 'starts-with', 'ends-with'])) {
                         throw new BadRequest('Unknown match-type: ' . $matchType);
                     }
                     $result['text-match'] = [
                         'negate-condition' => isset($elem['attributes']['negate-condition']) && $elem['attributes']['negate-condition'] === 'yes',
-                        'collation'        => isset($elem['attributes']['collation'])?$elem['attributes']['collation']:'i;unicode-casemap',
+                        'collation'        => isset($elem['attributes']['collation']) ? $elem['attributes']['collation'] : 'i;unicode-casemap',
                         'value'            => $elem['value'],
                         'match-type'       => $matchType,
                     ];
